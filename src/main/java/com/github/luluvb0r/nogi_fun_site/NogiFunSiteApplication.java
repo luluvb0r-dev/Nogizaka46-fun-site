@@ -4,10 +4,18 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+/**
+ * Entry point for the Nogizaka46 fun site application.
+ */
 public class NogiFunSiteApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(NogiFunSiteApplication.class, args);
-	}
+    /**
+     * Launches the Spring Boot application.
+     *
+     * @param args standard command-line arguments
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(NogiFunSiteApplication.class, args);
+    }
 
 }

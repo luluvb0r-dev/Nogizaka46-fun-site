@@ -4,10 +4,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+/**
+ * Simple test to verify that the Spring application context loads.
+ */
 class NogiFunSiteApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    /**
+     * Ensures the application starts without issues.
+     */
+    @Test
+    void contextLoads() {
+    }
 
 }
