@@ -1,6 +1,8 @@
 package com.github.luluvb0r.nogi_fun_site.repository;
 
 import com.github.luluvb0r.nogi_fun_site.model.Single;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -12,26 +14,28 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Repository that loads all Nogizaka46 singles from a CSV resource on the classpath.
- * The data is kept in memory for quick lookups.
+ * クラスパス上のCSVリソースから乃木坂46のシングル一覧を読み込むリポジトリ。
+ * データは高速に参照できるようメモリ上に保持される。
  */
 public class SingleRepository {
-    // Load the singles once when the class is initialized
+    // クラス初期化時に一度だけシングルを読み込む
+    private static final Logger log = LoggerFactory.getLogger(SingleRepository.class);
     private static final List<Single> SINGLES = loadSingles();
 
     /**
-     * Reads single data from the {@code singles.csv} file.
+     * {@code singles.csv} からシングルデータを読み込む。
      *
-     * @return list of {@link Single} objects parsed from the CSV
+     * @return CSVから解析された {@link Single} のリスト
      */
     private static List<Single> loadSingles() {
+        log.debug("Loading singles from CSV");
         try (InputStream is = SingleRepository.class.getResourceAsStream("/singles.csv");
              BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             Map<String, TempSingle> map = new LinkedHashMap<>();
-            // Skip header and process each CSV line
+            // ヘッダーを読み飛ばし、各行を処理する
             reader.lines().skip(1).forEach(line -> {
                 String[] parts = line.split(",");
-                // Only handle lines that represent singles
+                // 行がシングルを表していない場合は無視する
                 if (parts.length < 4 || !"Single".equals(parts[0])) {
                     return;
                 }
@@ -39,31 +43,33 @@ public class SingleRepository {
                 String title = parts[2];
                 String song = parts[3];
                 String key = parts[1] + "|" + title;
-                // Accumulate songs under the same single
+                // 同じシングルの曲をまとめる
                 map.computeIfAbsent(key, k -> new TempSingle(number, title))
                         .songs.add(song);
             });
             List<Single> result = new ArrayList<>();
             map.values().forEach(ts -> result.add(new Single(ts.number, ts.title, List.copyOf(ts.songs))));
+            log.debug("Loaded {} singles", result.size());
             return result;
         } catch (Exception e) {
-            // Return an empty list if loading fails; callers can handle missing data
+            // 読み込みに失敗した場合は空のリストを返す。呼び出し側でデータ不足を扱えるようにする
+            log.error("Failed to load singles", e);
             return List.of();
         }
     }
 
     /**
-     * Converts a release number such as "1st" or "2nd" into an integer.
+     * "1st" や "2nd" のようなリリース番号を整数に変換する。
      *
-     * @param releaseNumber string representation of the release number
-     * @return numeric release number
+     * @param releaseNumber リリース番号の文字列表現
+     * @return 数値のリリース番号
      */
     private static int parseNumber(String releaseNumber) {
         return Integer.parseInt(releaseNumber.replaceAll("\\D", ""));
     }
 
     /**
-     * Temporary mutable representation of a single used during CSV parsing.
+     * CSV解析中に使用する一時的な可変シングル。
      */
     private record TempSingle(int number, String title, List<String> songs) {
         TempSingle(int number, String title) {
@@ -72,21 +78,22 @@ public class SingleRepository {
     }
 
     /**
-     * Returns all singles loaded from the CSV.
+     * CSVから読み込んだすべてのシングルを返す。
      *
-     * @return immutable list of singles
+     * @return 変更不可のシングル一覧
      */
     public static List<Single> findAll() {
         return SINGLES;
     }
 
     /**
-     * Finds a single by its release number.
+     * リリース番号でシングルを検索する。
      *
-     * @param number release number to search for
-     * @return matching single or {@code null} if not found
+     * @param number 検索するリリース番号
+     * @return 見つかったシングル。存在しない場合は {@code null}
      */
     public static Single findByNumber(int number) {
+        log.debug("Searching for single number {}", number);
         return SINGLES.stream()
                 .filter(s -> s.number() == number)
                 .findFirst()

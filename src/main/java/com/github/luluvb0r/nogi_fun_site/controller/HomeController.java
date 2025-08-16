@@ -1,21 +1,26 @@
 package com.github.luluvb0r.nogi_fun_site.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 /**
- * Handles requests for the application's home page.
+ * アプリケーションのホームページへのリクエストを処理するコントローラ。
  */
 public class HomeController {
 
+    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
+
     /**
-     * Displays the landing page.
+     * トップページを表示する。
      *
-     * @return view name of the home page
+     * @return ホームページのビュー名
      */
     @GetMapping("/")
     public String home() {
+        log.debug("Rendering home page");
         return "index";
     }
 }

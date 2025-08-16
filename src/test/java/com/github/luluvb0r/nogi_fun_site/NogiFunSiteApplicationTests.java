@@ -5,12 +5,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 /**
- * Simple test to verify that the Spring application context loads.
+ * Springアプリケーションコンテキストが正しく読み込まれるかを確認するテスト。
  */
 class NogiFunSiteApplicationTests {
 
     /**
-     * Ensures the application starts without issues.
+     * アプリケーションが問題なく起動することを確認する。
      */
     @Test
     void contextLoads() {

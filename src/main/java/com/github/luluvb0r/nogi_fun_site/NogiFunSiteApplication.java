@@ -5,14 +5,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 /**
- * Entry point for the Nogizaka46 fun site application.
+ * 乃木坂46ファンサイトアプリケーションのエントリーポイント。
  */
 public class NogiFunSiteApplication {
 
     /**
-     * Launches the Spring Boot application.
+     * Spring Bootアプリケーションを起動する。
      *
-     * @param args standard command-line arguments
+     * @param args コマンドライン引数
      */
     public static void main(String[] args) {
         SpringApplication.run(NogiFunSiteApplication.class, args);
