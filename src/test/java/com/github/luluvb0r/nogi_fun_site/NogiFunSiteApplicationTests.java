@@ -4,10 +4,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+/**
+ * Springアプリケーションコンテキストが正しく読み込まれるかを確認するテスト。
+ */
 class NogiFunSiteApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    /**
+     * アプリケーションが問題なく起動することを確認する。
+     */
+    @Test
+    void contextLoads() {
+    }
 
 }
