@@ -8,6 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 
 @Controller
@@ -49,5 +52,17 @@ public class CallController {
         }
         model.addAttribute("single", single);
         return "songs";
+    }
+
+    /**
+     * JSON形式でシングル一覧を返す。
+     *
+     * @return シングルのリスト
+     */
+    @GetMapping("/api/singles")
+    @ResponseBody
+    public List<Single> singles() {
+        log.debug("Providing singles as JSON");
+        return SingleRepository.findAll();
     }
 }

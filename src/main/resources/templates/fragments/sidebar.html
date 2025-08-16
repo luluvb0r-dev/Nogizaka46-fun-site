@@ -1,6 +1,37 @@
 <aside xmlns:th="http://www.thymeleaf.org" th:fragment="sidebar">
     <ul>
-        <li><a th:href="@{/calls}">コール</a></li>
+        <li>
+            <a href="#" id="calls-toggle">コール</a>
+            <ul id="calls-list" style="display: none;"></ul>
+        </li>
         <li>サイリウム</li>
     </ul>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggle = document.getElementById('calls-toggle');
+            const list = document.getElementById('calls-list');
+            let loaded = false;
+            toggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (!loaded) {
+                    fetch('/api/singles')
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(single => {
+                                const li = document.createElement('li');
+                                const a = document.createElement('a');
+                                a.href = '/calls/' + single.number;
+                                a.textContent = single.number + '枚目 ' + single.name;
+                                li.appendChild(a);
+                                list.appendChild(li);
+                            });
+                            loaded = true;
+                            list.style.display = 'block';
+                        });
+                } else {
+                    list.style.display = list.style.display === 'none' ? 'block' : 'none';
+                }
+            });
+        });
+    </script>
 </aside>
