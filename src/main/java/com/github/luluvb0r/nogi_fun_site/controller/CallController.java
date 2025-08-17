@@ -29,8 +29,9 @@ public class CallController {
      */
     @GetMapping("/calls")
     public String calls(Model model) {
-        log.debug("Listing all singles");
-        model.addAttribute("releases", ReleaseRepository.findSingles());
+        List<Release> releases = ReleaseRepository.findSingles();
+        log.debug("Listing all singles, count={}", releases.size());
+        model.addAttribute("releases", releases);
         return "calls";
     }
 
@@ -50,6 +51,7 @@ public class CallController {
             log.debug("Single {} not found, redirecting to list", number);
             return "redirect:/calls";
         }
+        log.debug("Single {} has {} songs", number, release.songs().size());
         model.addAttribute("release", release);
         return "songs";
     }
@@ -62,8 +64,9 @@ public class CallController {
     @GetMapping("/api/releases")
     @ResponseBody
     public List<Release> releases() {
-        log.debug("Providing releases as JSON");
-        return ReleaseRepository.findAll();
+        List<Release> releases = ReleaseRepository.findAll();
+        log.debug("Providing {} releases as JSON", releases.size());
+        return releases;
     }
 
     /**

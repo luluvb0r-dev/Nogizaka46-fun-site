@@ -53,7 +53,10 @@
         if (loading) return; // 連打対策：2度目以降の並行要求を無視
         loading = true;
         try {
-          const res = await fetch('/api/releases', {
+          // サーバー側で埋め込まれた API パスを利用（コンテキストパス対応）
+          const apiUrl = list.dataset.apiUrl || '/api/releases';
+          console.log('[sidebar] fetching releases from', apiUrl);
+          const res = await fetch(apiUrl, {
             headers: { 'Accept': 'application/json' }
           });
           if (!res.ok) {

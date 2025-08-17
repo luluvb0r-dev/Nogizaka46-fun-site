@@ -91,6 +91,7 @@ public class ReleaseRepository {
      * @return 変更不可のリリース一覧
      */
     public static List<Release> findAll() {
+        log.debug("findAll called, returning {} releases", RELEASES.size());
         return RELEASES;
     }
 
@@ -100,9 +101,11 @@ public class ReleaseRepository {
      * @return シングルのリスト
      */
     public static List<Release> findSingles() {
-        return RELEASES.stream()
+        List<Release> singles = RELEASES.stream()
                 .filter(r -> "Single".equals(r.category()))
                 .toList();
+        log.debug("findSingles returning {} singles", singles.size());
+        return singles;
     }
 
     /**
@@ -113,9 +116,15 @@ public class ReleaseRepository {
      */
     public static Release findSingleByNumber(int number) {
         log.debug("Searching for single number {}", number);
-        return RELEASES.stream()
+        Release result = RELEASES.stream()
                 .filter(r -> "Single".equals(r.category()) && r.number() == number)
                 .findFirst()
                 .orElse(null);
+        if (result == null) {
+            log.debug("Single number {} not found", number);
+        } else {
+            log.debug("Single number {} found: {}", number, result.title());
+        }
+        return result;
     }
 }
