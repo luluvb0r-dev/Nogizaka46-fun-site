@@ -1,7 +1,7 @@
 package com.github.luluvb0r.nogi_fun_site.controller;
 
-import com.github.luluvb0r.nogi_fun_site.model.Single;
-import com.github.luluvb0r.nogi_fun_site.repository.SingleRepository;
+import com.github.luluvb0r.nogi_fun_site.model.Release;
+import com.github.luluvb0r.nogi_fun_site.repository.ReleaseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 /**
- * シングルとその収録曲を表示するコントローラ。
+ * シングル/アルバムとその収録曲を表示するコントローラ。
  */
 public class CallController {
 
@@ -30,7 +30,7 @@ public class CallController {
     @GetMapping("/calls")
     public String calls(Model model) {
         log.debug("Listing all singles");
-        model.addAttribute("singles", SingleRepository.findAll());
+        model.addAttribute("releases", ReleaseRepository.findSingles());
         return "calls";
     }
 
@@ -44,25 +44,39 @@ public class CallController {
     @GetMapping("/calls/{number}")
     public String songs(@PathVariable int number, Model model) {
         log.debug("Showing songs for single {}", number);
-        Single single = SingleRepository.findByNumber(number);
-        if (single == null) {
+        Release release = ReleaseRepository.findSingleByNumber(number);
+        if (release == null) {
             // 番号が存在しない場合はシングル一覧にリダイレクト
             log.debug("Single {} not found, redirecting to list", number);
             return "redirect:/calls";
         }
-        model.addAttribute("single", single);
+        model.addAttribute("release", release);
         return "songs";
     }
 
     /**
-     * JSON形式でシングル一覧を返す。
+     * JSON形式でリリース一覧を返す。
      *
-     * @return シングルのリスト
+     * @return リリースのリスト
      */
-    @GetMapping("/api/singles")
+    @GetMapping("/api/releases")
     @ResponseBody
-    public List<Single> singles() {
-        log.debug("Providing singles as JSON");
-        return SingleRepository.findAll();
+    public List<Release> releases() {
+        log.debug("Providing releases as JSON");
+        return ReleaseRepository.findAll();
+    }
+
+    /**
+     * 曲の詳細ページを表示する。
+     *
+     * @param title 曲名
+     * @param model モデル
+     * @return 曲詳細ページのビュー名
+     */
+    @GetMapping("/song/{title}")
+    public String songDetail(@PathVariable String title, Model model) {
+        log.debug("Showing detail for song {}", title);
+        model.addAttribute("title", title);
+        return "song-detail";
     }
 }

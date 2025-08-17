@@ -12,8 +12,8 @@
     <main>
         <h2>シングル一覧</h2>
         <ul>
-            <li th:each="single : ${singles}">
-                <a th:href="@{'/calls/' + ${single.number}}" th:text="${single.number} + '枚目 ' + ${single.name}"></a>
+            <li th:each="release : ${releases}">
+                <a th:href="@{'/calls/' + ${release.number}}" th:text="${release.number} + '枚目 ' + ${release.title}"></a>
             </li>
         </ul>
     </main>

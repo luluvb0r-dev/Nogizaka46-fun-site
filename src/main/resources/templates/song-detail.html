@@ -2,7 +2,7 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${release.number} + '枚目シングル ' + ${release.title}">シングル詳細</title>
+    <title th:text="${title}">曲詳細</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -10,10 +10,8 @@
 <div class="container">
     <aside th:replace="fragments/sidebar :: sidebar"></aside>
     <main>
-        <h2 th:text="${release.number} + '枚目シングル ' + ${release.title}"></h2>
-        <ul>
-            <li th:each="song : ${release.songs}" th:text="${song}"></li>
-        </ul>
+        <h2 th:text="${title}"></h2>
+        <p>このページは曲の詳細情報を表示する仮のページです。</p>
     </main>
 </div>
 <div th:replace="fragments/footer :: footer-scripts"></div>
