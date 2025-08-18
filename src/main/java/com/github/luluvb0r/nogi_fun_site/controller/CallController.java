@@ -55,6 +55,28 @@ public class CallController {
     }
 
     /**
+     * 指定されたシングル内の曲詳細を表示する。
+     *
+     * @param number シングルの番号
+     * @param index  曲のインデックス(0始まり)
+     * @param model  曲データを格納するモデル
+     * @return 曲詳細ページのビュー名。不明な場合は曲一覧へリダイレクト
+     */
+    @GetMapping("/calls/{number}/songs/{index}")
+    public String songDetail(@PathVariable int number, @PathVariable int index, Model model) {
+        log.debug("Showing detail for song {} of single {}", index, number);
+        Single single = SingleRepository.findByNumber(number);
+        if (single == null || index < 0 || index >= single.songs().size()) {
+            log.debug("Song {} of single {} not found, redirecting", index, number);
+            return "redirect:/calls/" + number;
+        }
+        String song = single.songs().get(index);
+        model.addAttribute("single", single);
+        model.addAttribute("song", song);
+        return "song";
+    }
+
+    /**
      * JSON形式でシングル一覧を返す。
      *
      * @return シングルのリスト
