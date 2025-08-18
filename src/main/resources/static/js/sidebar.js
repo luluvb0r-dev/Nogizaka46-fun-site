@@ -19,6 +19,16 @@
     let loading = false; // 取得中か（多重実行防止）
 
     const HIDDEN = 'hidden';
+    const STORAGE_KEY = 'calls-open';
+
+    // 状態を保存する
+    const saveState = (open) => {
+      try {
+        sessionStorage.setItem(STORAGE_KEY, open ? '1' : '0');
+      } catch (e) {
+        console.debug('[sidebar] failed to save state', e);
+      }
+    };
 
     // 表示/非表示と aria を同期させる
     const show = (visible) => {
@@ -70,6 +80,8 @@
 
           loaded = true;
           show(true); // 取得後に開く
+          saveState(true);
+          console.debug('[sidebar] fetched singles and opened list');
         } catch (err) {
           // 失敗時はメッセージを表示（アラートだけだとUXが悪いのでリスト内に表示）
           console.error('[sidebar] /api/singles fetch error:', err);
@@ -78,6 +90,7 @@
           li.textContent = '読み込みに失敗しました。時間をおいて再試行してください。';
           list.appendChild(li);
           show(true);
+          saveState(true);
         } finally {
           loading = false;
         }
@@ -85,7 +98,21 @@
         // 2回目以降は単に開閉
         const willOpen = list.classList.contains(HIDDEN);
         show(willOpen);
+        saveState(willOpen);
+        console.debug(`[sidebar] toggled list ${willOpen ? 'open' : 'close'}`);
       }
     });
+
+    // 保存された状態を復元する
+    let rememberedOpen = false;
+    try {
+      rememberedOpen = sessionStorage.getItem(STORAGE_KEY) === '1';
+    } catch (e) {
+      console.debug('[sidebar] failed to read state', e);
+    }
+    if (rememberedOpen) {
+      console.debug('[sidebar] restoring open state');
+      toggle.click();
+    }
   });
 })();

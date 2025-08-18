@@ -2,7 +2,7 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${single.number} + '枚目シングル ' + ${single.name}">シングル詳細</title>
+    <title th:text="${song}">曲詳細</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -10,12 +10,8 @@
 <div class="container">
     <aside th:replace="fragments/sidebar :: sidebar"></aside>
     <main>
-        <h2 th:text="${single.number} + '枚目シングル ' + ${single.name}"></h2>
-        <ul>
-            <li th:each="song, stat : ${single.songs}">
-                <a th:href="@{'/calls/' + ${single.number} + '/songs/' + ${stat.index}}" th:text="${song}"></a>
-            </li>
-        </ul>
+        <h2 th:text="${song}"></h2>
+        <p>このページは曲の詳細情報を表示します。</p>
     </main>
 </div>
 <div th:replace="fragments/footer :: footer-scripts"></div>
