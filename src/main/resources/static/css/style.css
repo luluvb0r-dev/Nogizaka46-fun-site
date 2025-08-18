@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap');
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Noto Sans JP', Arial, sans-serif;
     background-color: #f8f8ff;
     color: #333;
 }
@@ -40,3 +42,28 @@ main {
 
 .hidden { display: none !important; }
 .entame-row { margin-bottom: 0.5rem; }
+
+/* 円タメグラフの表示領域 */
+.result-area {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+#entame-chart {
+    width: 400px;
+    height: 400px;
+}
+
+#entame-table {
+    font-family: 'Noto Sans JP', sans-serif;
+    border-collapse: collapse;
+}
+
+#entame-table td {
+    padding: 4px 8px;
+}
+
+#entame-table .color-cell {
+    width: 20px;
+}

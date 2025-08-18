@@ -8,7 +8,10 @@
     const removeBtn   = document.getElementById('remove-form');
     const generateBtn = document.getElementById('generate-chart');
     const canvas      = document.getElementById('entame-chart');
+    const table       = document.getElementById('entame-table');
+    const imageInput  = document.getElementById('center-image');
     let chart = null;
+    let centerImage = null;
 
     // フォーム行を追加する関数
     const createRow = () => {
@@ -32,20 +35,52 @@
       generateBtn.disabled = sum !== 100;
     };
 
-    // 円グラフを生成する
+    // 円グラフを生成し、表を作成する
     const generateChart = () => {
       const labels = Array.from(container.querySelectorAll('.name')).map(i => i.value);
       const data   = Array.from(container.querySelectorAll('.percent')).map(i => Number(i.value));
       const colors = Array.from(container.querySelectorAll('.color')).map(i => i.value);
       if (chart) chart.destroy();
+      const centerImagePlugin = {
+        id: 'centerImage',
+        afterDraw: (c) => {
+          if (!centerImage) return;
+          const ctx = c.ctx;
+          const { left, top, width, height } = c.chartArea;
+          const x = left + width / 2;
+          const y = top + height / 2;
+          const size = Math.min(width, height) * 0.5;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+          ctx.drawImage(centerImage, x - size / 2, y - size / 2, size, size);
+          ctx.restore();
+        }
+      };
       chart = new Chart(canvas, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
           labels: labels,
           datasets: [{ data: data, backgroundColor: colors }]
-        }
+        },
+        options: {
+          cutout: '60%'
+        },
+        plugins: [centerImagePlugin]
       });
-      console.log('[entame] pie chart generated');
+      table.innerHTML = '';
+      labels.forEach((label, idx) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="color-cell" style="background-color: ${colors[idx]};"></td>
+          <td>${data[idx]}%</td>
+          <td>${label}</td>
+        `;
+        table.appendChild(row);
+      });
+      console.log('[entame] doughnut chart and table generated');
     };
 
     // ボタンイベント設定
@@ -64,6 +99,22 @@
     });
 
     generateBtn.addEventListener('click', generateChart);
+
+    // 中央画像の読み込み
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        centerImage = new Image();
+        centerImage.src = ev.target.result;
+        centerImage.onload = () => {
+          if (chart) chart.draw();
+        };
+        console.log('[entame] center image loaded');
+      };
+      reader.readAsDataURL(file);
+    });
 
     // 初期表示としてフォームを1つ追加
     createRow();
