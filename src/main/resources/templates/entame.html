@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>円タメグラフ</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<div class="container">
+    <aside th:replace="fragments/sidebar :: sidebar"></aside>
+    <main>
+        <h2>円タメグラフ</h2>
+        <div id="form-container"></div>
+        <button id="add-form">フォームを追加</button>
+        <button id="remove-form">フォームを削除</button>
+        <button id="generate-chart" disabled>円グラフを生成</button>
+        <div>
+            <label>中央画像: <input type="file" id="center-image" accept="image/*"></label>
+        </div>
+        <div class="result-area">
+            <canvas id="entame-chart"></canvas>
+            <table id="entame-table"></table>
+        </div>
+    </main>
+</div>
+<div th:replace="fragments/footer :: footer-scripts"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/entame.js" defer></script>
+</body>
+</html>
