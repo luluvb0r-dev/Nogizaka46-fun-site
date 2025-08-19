@@ -40,6 +40,7 @@
     const $add = document.getElementById("entame-add-btn");
     const $btn = document.getElementById("entame-generate-btn")
               || document.getElementById("entame-generate-btnwo");
+    const $save = document.getElementById("entame-save-btn");
     const $container = document.getElementById("entame-form-container");
     let $stage = document.getElementById("entame-stage");
 
@@ -82,16 +83,33 @@
         $container.removeChild(row);
         console.log("[entame] remove form");
         updateAddBtn();
+        updateGenerateBtn();
       });
+      row.querySelector(".percent").addEventListener("change", updateGenerateBtn);
       $container.appendChild(row);
       console.log("[entame] add form");
       updateAddBtn();
+      updateGenerateBtn();
     };
 
     /** 追加ボタンの活性状態を更新 */
     const updateAddBtn = () => {
       $add.disabled = $container.children.length >= MAX_ITEMS;
       refreshColors();
+    };
+
+    /** 生成ボタンの活性状態を更新（合計が100かチェック） */
+    const updateGenerateBtn = () => {
+      const total = Array.from($container.children)
+        .reduce((sum, row) => sum + Number(row.querySelector(".percent").value), 0);
+      const disabled = total !== 100;
+      $btn.disabled = disabled;
+      console.log(`[entame] total=${total} -> ${disabled ? "disabled" : "enabled"}`);
+    };
+
+    /** 保存ボタンの活性状態を更新 */
+    const updateSaveBtn = () => {
+      if ($save) $save.disabled = !$stage.querySelector("svg");
     };
 
     $add.addEventListener("click", createRow);
@@ -106,10 +124,37 @@
       $stage.innerHTML = "";
       const svg = drawEntameLike(items);
       $stage.appendChild(svg);
+      updateSaveBtn();
     });
+
+    if ($save) {
+      // SVG をPNG画像として保存する
+      $save.addEventListener("click", () => {
+        const svg = $stage.querySelector("svg");
+        if (!svg) return;
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(svg);
+        const canvas = document.createElement("canvas");
+        canvas.width = LAYOUT.W;
+        canvas.height = LAYOUT.H;
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0);
+          const a = document.createElement("a");
+          a.href = canvas.toDataURL("image/png");
+          a.download = "entame-graph.png";
+          a.click();
+          console.log("[entame] save image");
+        };
+        img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgStr);
+      });
+    }
 
     // 初期表示：フォーム1つ
     createRow();
+    updateGenerateBtn();
+    updateSaveBtn();
   });
 
   /*** 描画メイン ***/
