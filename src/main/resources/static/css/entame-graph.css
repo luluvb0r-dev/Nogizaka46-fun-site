@@ -1,7 +1,15 @@
 .entame-main { padding: 16px; }
 .toolbar { margin: 12px 0 16px; }
-#entame-generate-btn { padding: 8px 14px; font-size: 14px; border-radius: 10px; border: 1px solid #ccc; cursor: pointer; }
-#entame-generate-btn:hover { opacity: .9; }
+#entame-generate-btn, #entame-add-btn, #entame-save-btn { padding: 8px 14px; font-size: 14px; border-radius: 10px; border: 1px solid #ccc; cursor: pointer; }
+#entame-generate-btn:hover, #entame-add-btn:hover, #entame-save-btn:hover { opacity: .9; }
+.toolbar button:disabled { opacity: .6; cursor: not-allowed; }
+
+.form-container { margin: 12px 0; }
+.form-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.form-row .label { flex: 1; padding: 4px; }
+.form-row .percent { width: 80px; padding: 4px; }
+.form-row .remove-btn { padding: 4px 8px; }
+.color-chip { width: 24px; height: 24px; border: 1px solid #333; border-radius: 4px; }
 
 
 .entame-stage {
