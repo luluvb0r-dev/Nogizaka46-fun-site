@@ -1,0 +1,28 @@
+.entame-main { padding: 16px; }
+.toolbar { margin: 12px 0 16px; }
+#entame-generate-btn { padding: 8px 14px; font-size: 14px; border-radius: 10px; border: 1px solid #ccc; cursor: pointer; }
+#entame-generate-btn:hover { opacity: .9; }
+
+
+.entame-stage {
+width: 100%;
+max-width: 1280px;
+aspect-ratio: 16/9;
+background: radial-gradient(#bbb 1px, transparent 1px);
+background-size: 24px 24px; /* ドット方眼っぽい背景 */
+border: 2px solid #111;
+border-radius: 8px;
+overflow: hidden;
+}
+
+
+/* SVG を親にフィットさせる */
+.entame-stage svg { width: 100%; height: 100%; display: block; }
+
+
+/* 右側の凡例テキスト */
+.entame-legend-text { font-family: "Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; font-weight: 700; }
+
+
+/* 見出しっぽいロゴ部分 */
+.entame-title { font-family: "Noto Sans JP", system-ui, sans-serif; font-weight: 900; letter-spacing: 2px; }

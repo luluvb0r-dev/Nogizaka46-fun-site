@@ -3,29 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>円タメグラフ</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/entame-graph.css">
 </head>
 <body>
 <header th:replace="fragments/header :: header"></header>
 <div class="container">
     <aside th:replace="fragments/sidebar :: sidebar"></aside>
-    <main>
-        <h2>円タメグラフ</h2>
-        <div id="form-container"></div>
-        <button id="add-form">フォームを追加</button>
-        <button id="remove-form">フォームを削除</button>
-        <button id="generate-chart" disabled>円グラフを生成</button>
-        <div>
-            <label>中央画像: <input type="file" id="center-image" accept="image/*"></label>
+    <main class="entame-main">
+        <h2>円タメグラフ（画像風SVG）</h2>
+        <p class="help">※ ボタンを押すと、TV風の“画像っぽい”レイアウト（SVG）を生成して表示します。</p>
+        <div class="toolbar">
+            <button id="entame-generate-btn" type="button">円タメグラフ</button>
         </div>
-        <div class="result-area">
-            <canvas id="entame-chart"></canvas>
-            <table id="entame-table"></table>
-        </div>
+        <div id="entame-stage" class="entame-stage" aria-live="polite"></div>
     </main>
 </div>
 <div th:replace="fragments/footer :: footer-scripts"></div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="/js/entame.js" defer></script>
+<script src="/js/entame-graph.js" defer></script>
 </body>
 </html>
