@@ -1,3 +1,4 @@
+// 円タメグラフのフォーム管理とSVG生成を行うスクリプト
 (() => {
   "use strict";
 
@@ -19,18 +20,15 @@
     LEGEND_RIGHT_PAD: 20,
   };
 
-  /*** データ（必要に応じて編集） ***/
-  const DATA = [
-    { label: "映画『それいけ！アンパンマン 勇気の花がひらくとき』", percent: 25, color: "#D6332F" },
-    { label: "『きらりん☆レボリューション』",                          percent: 15, color: "#F08B2C" },
-    { label: "乃木坂46『シンクロニシティ』",                           percent: 15, color: "#FFB11B" },
-    { label: "カゲロウプロジェクト『カゲロウデイズ』",                  percent: 10, color: "#7DD21E" },
-    { label: "アニメ『僕のヒーローアカデミア』第2話",                    percent: 9,  color: "#28C7B0" },
-    { label: "アニメ『けいおん！』",                                   percent: 8,  color: "#00B3E6" },
-    { label: "SEKAI NO OWARI『幻の命』",                               percent: 7,  color: "#4BA3F6" },
-    { label: "にじさんじ",                                               percent: 6,  color: "#7D4BE3" },
-    { label: "映画『サマーウォーズ』",                                 percent: 5,  color: "#E63B9F" },
+  /*** 色とフォーム上限 ***/
+  const COLORS = [
+    "#D6332F", "#F08B2C", "#FFB11B", "#7DD21E", "#28C7B0",
+    "#00B3E6", "#4BA3F6", "#7D4BE3", "#E63B9F"
   ];
+  const MAX_ITEMS = COLORS.length;
+  const SELECT_OPTIONS = Array.from({ length: 100 }, (_, i) =>
+    `<option value="${i + 1}">${i + 1}</option>`
+  ).join("");
 
   /*** DOM 準備 ***/
   function ready(fn) {
@@ -39,12 +37,18 @@
   }
 
   ready(() => {
+    const $add = document.getElementById("entame-add-btn");
     const $btn = document.getElementById("entame-generate-btn")
               || document.getElementById("entame-generate-btnwo");
+    const $container = document.getElementById("entame-form-container");
     let $stage = document.getElementById("entame-stage");
 
     if (!$btn) {
       console.warn("[entame] ボタンが見つかりません。id='entame-generate-btn' を付けてください。");
+      return;
+    }
+    if (!$add || !$container) {
+      console.warn("[entame] フォーム要素が見つかりません。");
       return;
     }
     if (!$stage) {
@@ -55,11 +59,57 @@
       $btn.insertAdjacentElement("afterend", $stage);
     }
 
+    /** フォーム行の色を順番に設定 */
+    const refreshColors = () => {
+      Array.from($container.children).forEach((row, i) => {
+        const chip = row.querySelector(".color-chip");
+        if (chip) chip.style.backgroundColor = COLORS[i];
+      });
+    };
+
+    /** フォーム行を追加する */
+    const createRow = () => {
+      if ($container.children.length >= MAX_ITEMS) return;
+      const row = document.createElement("div");
+      row.className = "form-row";
+      row.innerHTML = `
+        <span class="color-chip"></span>
+        <input type="text" class="label" maxlength="30" placeholder="ラベル">
+        <select class="percent">${SELECT_OPTIONS}</select>
+        <button type="button" class="remove-btn">削除</button>
+      `;
+      row.querySelector(".remove-btn").addEventListener("click", () => {
+        $container.removeChild(row);
+        console.log("[entame] remove form");
+        updateAddBtn();
+      });
+      $container.appendChild(row);
+      console.log("[entame] add form");
+      updateAddBtn();
+    };
+
+    /** 追加ボタンの活性状態を更新 */
+    const updateAddBtn = () => {
+      $add.disabled = $container.children.length >= MAX_ITEMS;
+      refreshColors();
+    };
+
+    $add.addEventListener("click", createRow);
+
     $btn.addEventListener("click", () => {
+      const items = Array.from($container.children).map((row, i) => ({
+        label: row.querySelector(".label").value.trim(),
+        percent: Number(row.querySelector(".percent").value),
+        color: COLORS[i]
+      }));
+      console.log(`[entame] generate graph (${items.length} items)`);
       $stage.innerHTML = "";
-      const svg = drawEntameLike(DATA);
+      const svg = drawEntameLike(items);
       $stage.appendChild(svg);
     });
+
+    // 初期表示：フォーム1つ
+    createRow();
   });
 
   /*** 描画メイン ***/
