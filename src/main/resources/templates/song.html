@@ -6,14 +6,14 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<header th:replace="fragments/header :: header"></header>
+<header th:replace="~{fragments/header :: header}"></header>
 <div class="container">
-    <aside th:replace="fragments/sidebar :: sidebar"></aside>
+    <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
     <main>
         <h2 th:text="${song}"></h2>
         <p>このページは曲の詳細情報を表示します。</p>
     </main>
 </div>
-<div th:replace="fragments/footer :: footer-scripts"></div>
+<div th:replace="~{fragments/footer :: footer-scripts}"></div>
 </body>
 </html>
