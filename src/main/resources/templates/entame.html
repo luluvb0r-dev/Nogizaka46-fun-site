@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<header th:replace="fragments/header :: header"></header>
+<header th:replace="~{fragments/header :: header}"></header>
 <div class="container">
-    <aside th:replace="fragments/sidebar :: sidebar"></aside>
+    <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
     <main class="entame-main">
         <h2>円タメグラフ（画像風SVG）</h2>
         <p class="help">※ ボタンを押すと、TV風の“画像っぽい”レイアウト（SVG）を生成して表示します。</p>
@@ -22,7 +22,7 @@
         <div id="entame-stage" class="entame-stage" aria-live="polite"></div>
     </main>
 </div>
-<div th:replace="fragments/footer :: footer-scripts"></div>
+<div th:replace="~{fragments/footer :: footer-scripts}"></div>
 <script src="/js/entame-graph.js" defer></script>
 </body>
 </html>
